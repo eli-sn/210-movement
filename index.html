@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -316,13 +315,6 @@
     90%, 92%                 { box-shadow: 0 0 14px rgba(168,85,247,0.9), 0 0 30px rgba(124,58,237,0.4); }
   }
 
-  .header-icon {
-    width: 30px; height: 30px;
-    background: var(--accent);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 16px;
-    clip-path: polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
-  }
 </style>
 </head>
 <body>
@@ -427,7 +419,7 @@
 </script>
 
 <div class="header">
-  <div class="header-icon">⚡</div>
+  <img src="data:image/png;base64,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" style="width:36px;height:36px;object-fit:contain;" />
   <div class="header-title">210BWC Movement</div>
   <div class="header-sub">MSG GEN v2.1</div>
 </div>
@@ -452,7 +444,7 @@
       <label>Addressing</label>
       <div class="preset-row" style="margin-bottom:0">
         <button class="preset-btn" id="rec-sirs" onclick="setRecipient('Sirs')">Sirs</button>
-        <button class="preset-btn highlight" id="rec-both" onclick="setRecipient('Sirs and Senior')">Sirs and Senior</button>
+        <button class="preset-btn highlight" id="rec-both" onclick="setRecipient('Sirs and Seniors')">Sirs and Seniors</button>
         <button class="preset-btn" id="rec-senior" onclick="setRecipient('Senior')">Senior</button>
       </div>
     </div>
@@ -532,6 +524,17 @@
     </div>
   </div>
 
+  <!-- CHECKED BY -->
+  <div class="card">
+    <div class="card-header">Checked By</div>
+    <div class="card-body">
+      <label>Checker</label>
+      <select id="checkerSelect">
+        <option value="">— Select checker —</option>
+      </select>
+    </div>
+  </div>
+
   <div class="error-msg" id="errorMsg"></div>
 
   <button class="btn-generate" onclick="generate()">▶ Generate Messages</button>
@@ -578,7 +581,7 @@ const PERSONNEL = [
 
 let locations = ['A202', 'SQN', 'OMA', 'W2'];
 let selected = new Set();
-let recipient = 'Sirs and Senior';
+let recipient = 'Sirs and Seniors';
 let activePreset = null; // 'all', 'less', or null
 let transportMode = 'marching';
 
@@ -592,7 +595,7 @@ function setTransport(mode) {
 function setRecipient(val) {
   recipient = val;
   document.querySelectorAll('[id^="rec-"]').forEach(b => b.classList.remove('highlight'));
-  const map = { 'Sirs': 'rec-sirs', 'Sirs and Senior': 'rec-both', 'Senior': 'rec-senior' };
+  const map = { 'Sirs': 'rec-sirs', 'Sirs and Seniors': 'rec-both', 'Senior': 'rec-senior' };
   document.getElementById(map[val])?.classList.add('highlight');
 }
 let weatherData = null;
@@ -609,6 +612,15 @@ function init() {
   renderPersonnel();
   renderLocations();
   setNow();
+
+  // Populate checker dropdown with same list as sender
+  const ck = document.getElementById('checkerSelect');
+  PERSONNEL.forEach((p, i) => {
+    const o = document.createElement('option');
+    o.value = i;
+    o.textContent = `${p.rank} ${p.ops} — ${p.appt}`;
+    ck.appendChild(o);
+  });
 }
 
 // ── PERSONNEL ───────────────────────────────────────
@@ -709,6 +721,10 @@ function generate() {
   weatherData = { feelsLike: fl, windGust: wg };
   if (!/^\d{4}$/.test(time))        { showError('Enter a valid 4-digit time (e.g. 1318).'); return; }
 
+  const checkerIdx = document.getElementById('checkerSelect').value;
+  if (checkerIdx === '')             { showError('Select a checker.'); return; }
+  const checker = PERSONNEL[parseInt(checkerIdx)];
+
   const sender = PERSONNEL[parseInt(senderIdx)];
 
   // Unit label for message
@@ -716,8 +732,8 @@ function generate() {
   const isLessPreset = activePreset === 'less';
 
   const personnelLines = isLessPreset
-    ? `210th BWC
-less LTA THAM C`
+    ? `210th BWC less 
+LTA THAM C`
     : PERSONNEL
         .filter((_, i) => selected.has(i))
         .map(p => `${p.rank} ${p.ops}${p.soar ? '+' : ''}`)
@@ -738,6 +754,8 @@ Has left ${from} for ${to} as of ${time}H.
 
 We will be ${transportMode === 'marching' ? 'marching' : transportMode === 'walking' ? 'walking' : 'driven by 209 BWC'}.
 
+Checked by: ${checker.rank} ${checker.ops}
+
 For your information, ${recipient}.`;
 
   // ── ARRIVAL MESSAGE ──
@@ -749,6 +767,8 @@ I am ${sender.rank} ${sender.ops}, ${sender.appt} of 210th BWC.
 ${personnelLines}
 
 Has arrived at ${to} as of [CHANGE TIME].
+
+Checked by: ${checker.rank} ${checker.ops}
 
 For your information, ${recipient}.`;
 
