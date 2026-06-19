@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>210BWC Movement</title>
+<style>
+  :root {
+    --ink: #141414;
+    --muted: #8c8c92;
+    --line: #e6e6ea;
+    --fill: #f7f7f9;
+    --accent: #5b21b6;
+    --accent-dark: #4c1d95;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    background: #fff;
+    color: var(--ink);
+    font-size: 15px;
+    line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 460px;
+    margin: 0 auto;
+    padding: 20px 16px 40px;
+  }
+
+  /* ── Header ── */
+  header {
+    padding-bottom: 14px;
+    border-bottom: 2px solid var(--ink);
+    margin-bottom: 4px;
+  }
+
+  header h1 {
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  header p {
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    margin-top: 2px;
+  }
+
+  /* ── Sections ── */
+  section {
+    padding: 14px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .lbl {
+    display: block;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--muted);
+    margin-bottom: 7px;
+  }
+
+  /* ── Inputs ── */
+  select, input[type="text"] {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 15px;
+    color: var(--ink);
+    background: var(--fill);
+    appearance: none;
+    outline: none;
+    transition: border-color .12s, background .12s;
+  }
+
+  select:focus, input:focus {
+    border-color: var(--accent);
+    background: #fff;
+  }
+
+  select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%238c8c92' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 32px;
+  }
+
+  input::placeholder { color: #b9b9c0; }
+
+  /* ── Grid rows ── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1.3fr; gap: 8px; }
+
+  .field .lbl { margin-bottom: 5px; }
+
+  .inline { display: flex; gap: 6px; }
+  .inline > input { flex: 1; min-width: 0; }
+
+  /* ── Segmented buttons ── */
+  .seg {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .seg button {
+    padding: 8px 13px;
+    border: 1px solid var(--line);
+    border-radius: 100px;
+    background: #fff;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+    cursor: pointer;
+    transition: all .12s;
+  }
+
+  .seg button.on {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+
+  .btn-quiet {
+    padding: 8px 13px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #fff;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: border-color .12s;
+  }
+
+  .btn-quiet:active { border-color: var(--accent); }
+
+  /* ── Personnel ── */
+  .ppl-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 7px;
+  }
+
+  .ppl-head .lbl { margin: 0; }
+
+  .ppl-actions {
+    display: flex;
+    gap: 10px;
+  }
+
+  .ppl-actions button {
+    background: none;
+    border: none;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--accent);
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .ppl {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px;
+  }
+
+  .pp {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 10px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    user-select: none;
+    transition: all .1s;
+    background: #fff;
+  }
+
+  .pp .dot {
+    width: 14px;
+    height: 14px;
+    border: 1.5px solid #c9c9cf;
+    border-radius: 50%;
+    flex-shrink: 0;
+    transition: all .1s;
+    position: relative;
+  }
+
+  .pp.on {
+    border-color: var(--accent);
+    background: #faf8ff;
+  }
+
+  .pp.on .dot {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .pp.on .dot::after {
+    content: '';
+    position: absolute;
+    inset: 3.5px;
+    background: #fff;
+    border-radius: 50%;
+  }
+
+  .pp .rk { color: var(--muted); font-weight: 400; }
+
+  /* ── Generate ── */
+  .generate {
+    width: 100%;
+    padding: 15px;
+    margin-top: 18px;
+    background: var(--ink);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    transition: background .12s;
+  }
+
+  .generate:active { background: var(--accent-dark); }
+
+  .err {
+    margin-top: 12px;
+    padding: 10px 12px;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    color: #b91c1c;
+    font-size: 13px;
+    display: none;
+  }
+  .err.show { display: block; }
+
+  /* ── Output ── */
+  #out { display: none; margin-top: 20px; }
+  #out.show { display: block; }
+
+  .tabs {
+    display: flex;
+    background: var(--fill);
+    border-radius: 10px;
+    padding: 3px;
+    margin-bottom: 10px;
+  }
+
+  .tabs button {
+    flex: 1;
+    padding: 9px;
+    border: none;
+    border-radius: 8px;
+    background: none;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all .12s;
+  }
+
+  .tabs button.on {
+    background: #fff;
+    color: var(--ink);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  }
+
+  .msg {
+    white-space: pre-wrap;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 14px;
+    font-size: 13.5px;
+    line-height: 1.6;
+    margin-bottom: 8px;
+  }
+
+  .copy {
+    width: 100%;
+    padding: 12px;
+    background: #fff;
+    border: 1.5px solid var(--ink);
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .12s;
+  }
+
+  .copy.done {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+
+
+  .variant {
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 10px;
+  }
+
+  .variant-head {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+
+  .variant .msg {
+    border: none;
+    padding: 0;
+    margin-bottom: 10px;
+  }
+
+  .pane { display: none; }
+  .pane.on { display: block; }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header>
+    <h1>Movement Message</h1>
+    <p>210th BWC</p>
+  </header>
+
+  <section>
+    <div class="grid-2">
+      <div class="field">
+        <span class="lbl">Sender</span>
+        <select id="sender"><option value="">Select</option></select>
+      </div>
+      <div class="field">
+        <span class="lbl">Checked by</span>
+        <select id="checker"><option value="">Select</option></select>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="ppl-head">
+      <span class="lbl">Personnel <span id="count" style="letter-spacing:0;font-weight:400">· 0</span></span>
+      <div class="ppl-actions">
+        <button onclick="selAll()">All</button>
+        <button onclick="selNone()">Clear</button>
+      </div>
+    </div>
+    <div class="ppl" id="ppl"></div>
+  </section>
+
+  <section>
+    <span class="lbl">Route</span>
+    <div class="grid-2">
+      <select id="from"></select>
+      <select id="to"></select>
+    </div>
+    <div class="inline" style="margin-top:6px">
+      <input type="text" id="newLoc" placeholder="Add location" />
+      <button class="btn-quiet" onclick="addLoc()">Add</button>
+    </div>
+  </section>
+
+  <section>
+    <div class="ppl-head">
+      <span class="lbl">Weather — Pearce</span>
+      <div class="ppl-actions">
+        <button id="fetchBtn" onclick="fetchWx()">Auto-fill</button>
+      </div>
+    </div>
+    <div class="grid-3">
+      <div class="field">
+        <span class="lbl">Feels like °C</span>
+        <input type="text" id="temp" placeholder="7.2" inputmode="decimal" />
+      </div>
+      <div class="field">
+        <span class="lbl">Gust kts</span>
+        <input type="text" id="wind" placeholder="9" inputmode="decimal" />
+      </div>
+      <div class="field">
+        <span class="lbl">Time</span>
+        <input type="text" id="time" maxlength="4" placeholder="auto" inputmode="numeric" />
+      </div>
+    </div>
+  </section>
+
+  <section style="border-bottom:none">
+    <span class="lbl">Transport</span>
+    <div class="seg" id="transSeg">
+      <button class="on" data-v="walking">Walking</button>
+      <button data-v="marching">Marching</button>
+      <button data-v="driven">Driven by 209 BWC</button>
+    </div>
+  </section>
+
+  <button class="generate" onclick="generate()">Generate messages</button>
+
+  <div class="err" id="err"></div>
+
+  <div id="out">
+    <div class="tabs">
+      <button class="on" onclick="pane('dep')">Departure</button>
+      <button onclick="pane('arr')">Arrival</button>
+    </div>
+    <div class="pane on" id="pane-dep">
+      <div id="list-dep"></div>
+    </div>
+    <div class="pane" id="pane-arr">
+      <div id="list-arr"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const PERSONNEL = [
+  { rank:'LTA', ops:'THAM C',  appt:'OPERATIONS IC',       soar:false },
+  { rank:'OCT', ops:'TAN A',   appt:'COURSE IC',            soar:true  },
+  { rank:'OCT', ops:'KHU H',   appt:'COURSE 2IC',           soar:false },
+  { rank:'OCT', ops:'SNG R',   appt:'SPORTS IC',            soar:false },
+  { rank:'OCT', ops:'D SILVA', appt:'ADMIN & SECURITY IC',  soar:false },
+  { rank:'OCT', ops:'POON W',  appt:'RATIONS IC',           soar:false },
+  { rank:'OCT', ops:'TING Z',  appt:'PUBLICATIONS IC',      soar:false },
+  { rank:'OCT', ops:'HO P',    appt:'PLANNING & STATS IC',  soar:true  },
+  { rank:'OCT', ops:'LOH W',   appt:'MESS IC',              soar:false },
+  { rank:'OCT', ops:'LIM C',   appt:'SAFETY IC',            soar:true  },
+  { rank:'OCT', ops:'TAN W',   appt:'LOGISTICS IC',         soar:true  },
+  { rank:'OCT', ops:'TANG G',  appt:'STANDARDS IC',         soar:true  },
+  { rank:'OCT', ops:'LIM K',   appt:'HERITAGE IC',          soar:true  },
+  { rank:'OCT', ops:'LIM J',   appt:'TRANSPORT IC',         soar:true  },
+];
+
+let locations = ['A202', 'SQN', 'OMA', 'W2'];
+let selected = new Set();
+let transport = 'walking';
+
+function init() {
+  ['sender', 'checker'].forEach(id => {
+    const el = document.getElementById(id);
+    PERSONNEL.forEach((p, i) => {
+      const o = document.createElement('option');
+      o.value = i;
+      o.textContent = p.rank + ' ' + p.ops;
+      el.appendChild(o);
+    });
+  });
+
+  renderPpl();
+  renderLocs();
+
+  segInit('transSeg', v => transport = v);
+}
+
+function segInit(id, cb) {
+  document.querySelectorAll('#' + id + ' button').forEach(b => {
+    b.onclick = () => {
+      document.querySelectorAll('#' + id + ' button').forEach(x => x.classList.remove('on'));
+      b.classList.add('on');
+      cb(b.dataset.v);
+    };
+  });
+}
+
+function renderPpl() {
+  const wrap = document.getElementById('ppl');
+  wrap.innerHTML = '';
+  PERSONNEL.forEach((p, i) => {
+    const d = document.createElement('div');
+    d.className = 'pp' + (selected.has(i) ? ' on' : '');
+    d.onclick = () => { selected.has(i) ? selected.delete(i) : selected.add(i); renderPpl(); };
+    d.innerHTML = '<span class="dot"></span><span><span class="rk">' + p.rank + '</span> ' + p.ops + '</span>';
+    wrap.appendChild(d);
+  });
+  document.getElementById('count').textContent = '· ' + selected.size;
+}
+
+function selAll() { PERSONNEL.forEach((_, i) => selected.add(i)); renderPpl(); }
+function selNone() { selected.clear(); renderPpl(); }
+
+function renderLocs() {
+  ['from', 'to'].forEach(id => {
+    const el = document.getElementById(id);
+    const prev = el.value;
+    el.innerHTML = '';
+    locations.forEach(l => {
+      const o = document.createElement('option');
+      o.value = l; o.textContent = l;
+      el.appendChild(o);
+    });
+    if (locations.includes(prev)) el.value = prev;
+  });
+  if (locations.length > 1 && document.getElementById('to').value === document.getElementById('from').value) {
+    document.getElementById('to').value = locations[1];
+  }
+}
+
+function addLoc() {
+  const inp = document.getElementById('newLoc');
+  const v = inp.value.trim().toUpperCase();
+  if (v && !locations.includes(v)) { locations.push(v); renderLocs(); }
+  inp.value = '';
+}
+
+function showErr(m) {
+  const e = document.getElementById('err');
+  e.textContent = m;
+  e.classList.add('show');
+}
+
+function generate() {
+  document.getElementById('err').classList.remove('show');
+
+  const sIdx = document.getElementById('sender').value;
+  const cIdx = document.getElementById('checker').value;
+  const from = document.getElementById('from').value;
+  const to   = document.getElementById('to').value;
+  const time = document.getElementById('time').value.trim();
+  const temp = document.getElementById('temp').value.trim();
+  const wind = document.getElementById('wind').value.trim();
+
+  if (sIdx === '')            return showErr('Select a sender.');
+  if (cIdx === '')            return showErr('Select who checked the message.');
+  if (selected.size === 0)    return showErr('Select at least one person.');
+  if (!temp || !wind)         return showErr('Enter the temperature and wind gust.');
+  if (time && !/^\d{4}$/.test(time))  return showErr('Time must be 4 digits, e.g. 0917 — or leave blank for auto.');
+
+  const sender  = PERSONNEL[sIdx];
+  const checker = PERSONNEL[cIdx];
+
+  const deselected = PERSONNEL.map((_, i) => i).filter(i => !selected.has(i));
+  const isGroup = selected.size >= PERSONNEL.length - 4;
+
+  let block;
+  if (isGroup && deselected.length > 0) {
+    block = '210th BWC less,\n' + deselected.map(i => PERSONNEL[i].rank + ' ' + PERSONNEL[i].ops).join('\n');
+  } else if (isGroup) {
+    block = '210th BWC,';
+  } else {
+    block = 'We,\n' + PERSONNEL.filter((_, i) => selected.has(i))
+      .map(p => p.rank + ' ' + p.ops).join('\n');
+  }
+
+  const transText = transport === 'marching' ? 'marching'
+                  : transport === 'walking'  ? 'walking'
+                  : 'driven by 209 BWC';
+
+  // Departure time: use manual override if entered, else always present + 10 min (computed live)
+  function depTime() {
+    if (time) return time;
+    const d = new Date();
+    return String(d.getHours()).padStart(2, '0') + String(d.getMinutes()).padStart(2, '0');
+  }
+
+  const idLine = 'I am ' + sender.rank + ' ' + sender.ops + ', ' + sender.appt + ' of 210th BWC.';
+  const checkLine = 'Checked by: ' + checker.rank + ' ' + checker.ops;
+
+  function buildDep(r) {
+    return 'Good Day ' + r + ',\n\n'
+      + idLine + '\n\n'
+      + 'Temperature: ' + temp + ' Degrees Celsius\n'
+      + 'Wind Gust: ' + wind + ' Knots\n\n'
+      + block + '\n\n'
+      + 'Has left ' + from + ' for ' + to + ' as of ' + depTime() + 'H.\n\n'
+      + 'We will be ' + transText + '.\n\n'
+      + checkLine + '\n\n'
+      + 'For your information, ' + r + '.';
+  }
+
+  function buildArr(r) {
+    return 'Good Day ' + r + ',\n\n'
+      + idLine + '\n\n'
+      + block + '\n\n'
+      + 'Has arrived at ' + to + ' as of ' + depTime() + 'H.\n\n'
+      + checkLine + '\n\n'
+      + 'For your information, ' + r + '.';
+  }
+
+  renderOutput(buildDep, buildArr);
+  document.getElementById('out').classList.add('show');
+  pane('dep');
+  document.getElementById('out').scrollIntoView({ behavior: 'smooth' });
+}
+
+const RECIPIENTS = ['Sirs and Senior', 'Sirs', 'Sirs and Seniors', 'Senior'];
+
+let currentBuilders = null;
+
+function renderOutput(buildDep, buildArr) {
+  currentBuilders = { dep: buildDep, arr: buildArr };
+  ['dep', 'arr'].forEach(kind => {
+    const builder = currentBuilders[kind];
+    const container = document.getElementById('list-' + kind);
+    container.innerHTML = '';
+    RECIPIENTS.forEach((r) => {
+      const card = document.createElement('div');
+      card.className = 'variant';
+      card.innerHTML =
+        '<div class="variant-head">' + r + '</div>' +
+        '<div class="msg"></div>' +
+        '<button class="copy">Copy</button>';
+      card.querySelector('.msg').textContent = builder(r);
+      const btn = card.querySelector('.copy');
+      btn.onclick = () => {
+        // Regenerate at the moment of copy so the time is always current
+        const freshText = builder(r);
+        card.querySelector('.msg').textContent = freshText; // sync display too
+        const ok = () => {
+          btn.textContent = 'Copied';
+          btn.classList.add('done');
+          setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('done'); }, 1500);
+        };
+        if (navigator.clipboard) navigator.clipboard.writeText(freshText).then(ok).catch(() => fb(freshText, ok));
+        else fb(freshText, ok);
+      };
+      container.appendChild(card);
+    });
+  });
+}
+
+// Refresh displayed messages every 15s so the visible time stays current
+setInterval(() => {
+  if (!currentBuilders) return;
+  ['dep', 'arr'].forEach(kind => {
+    const builder = currentBuilders[kind];
+    const cards = document.querySelectorAll('#list-' + kind + ' .variant');
+    cards.forEach((card, i) => {
+      const r = RECIPIENTS[i];
+      const msgEl = card.querySelector('.msg');
+      if (msgEl) msgEl.textContent = builder(r);
+    });
+  });
+}, 15000);
+
+function pane(which) {
+  document.querySelectorAll('.tabs button').forEach((t, i) => {
+    t.classList.toggle('on', (i === 0) === (which === 'dep'));
+  });
+  document.getElementById('pane-dep').classList.toggle('on', which === 'dep');
+  document.getElementById('pane-arr').classList.toggle('on', which === 'arr');
+}
+
+function fb(text, cb) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.style.cssText = 'position:fixed;opacity:0';
+  document.body.appendChild(ta);
+  ta.select();
+  document.execCommand('copy');
+  document.body.removeChild(ta);
+  cb();
+}
+
+async function fetchWx() {
+  const btn = document.getElementById('fetchBtn');
+  btn.textContent = 'Fetching\u2026';
+  btn.disabled = true;
+
+  // BOM JSON feeds for Pearce RAAF (station 94608)
+  const FEEDS = [
+    'https://www.bom.gov.au/fwo/IDW60801/IDW60801.94608.json',
+    'https://www.bom.gov.au/fwo/IDW60901/IDW60901.94608.json',
+  ];
+
+  // Proxy builders — each returns a URL string for a given target
+  const PROXIES = [
+    u => 'https://corsproxy.io/?url=' + encodeURIComponent(u),
+    u => 'https://api.allorigins.win/raw?url=' + encodeURIComponent(u),
+    u => 'https://api.allorigins.win/get?url=' + encodeURIComponent(u),
+    u => 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(u),
+    u => 'https://thingproxy.freeboard.io/fetch/' + u,
+    u => 'https://proxy.cors.sh/' + u,
+  ];
+
+  async function tryFetch(proxyUrl) {
+    const r = await fetch(proxyUrl, { signal: AbortSignal.timeout(10000) });
+    if (!r.ok) throw new Error('http ' + r.status);
+    const txt = await r.text();
+    // allorigins /get wraps in { contents }
+    let data;
+    try {
+      data = JSON.parse(txt);
+      if (data && typeof data.contents === 'string') data = JSON.parse(data.contents);
+    } catch (e) {
+      throw new Error('parse');
+    }
+    return data;
+  }
+
+  // 1. Try our own serverless endpoint first (reliable, no CORS)
+  try {
+    const r = await fetch('/api/weather', { signal: AbortSignal.timeout(10000) });
+    if (r.ok) {
+      const w = await r.json();
+      if (w && w.feelsLike != null) {
+        document.getElementById('temp').value = w.feelsLike;
+        if (w.windGust != null) document.getElementById('wind').value = w.windGust;
+        btn.textContent = 'Filled \u2713';
+        setTimeout(() => { btn.textContent = 'Auto-fill'; }, 2000);
+        btn.disabled = false;
+        return;
+      }
+    }
+  } catch (e) { /* fall through to proxies */ }
+
+  // 2. Fallback: public proxies (used when running outside Vercel, e.g. local file)
+  let obs = null;
+  outer:
+  for (const feed of FEEDS) {
+    for (const proxy of PROXIES) {
+      try {
+        const j = await tryFetch(proxy(feed));
+        const d = j && j.observations && j.observations.data;
+        if (d && d.length) { obs = d[0]; break outer; }
+      } catch (e) { /* try next */ }
+    }
+  }
+
+  if (obs && obs.apparent_t != null) {
+    document.getElementById('temp').value = obs.apparent_t;
+    let kts = null;
+    if (obs.gust_kt != null) kts = obs.gust_kt;
+    else if (obs.gust_kmh != null) kts = Math.round(obs.gust_kmh * 0.539957);
+    if (kts != null) document.getElementById('wind').value = kts;
+    btn.textContent = 'Filled \u2713';
+    setTimeout(() => { btn.textContent = 'Auto-fill'; }, 2000);
+  } else {
+    btn.textContent = 'Failed \u2014 type manually';
+    setTimeout(() => { btn.textContent = 'Auto-fill'; }, 3000);
+  }
+  btn.disabled = false;
+}
+
+init();
+</script>
+</body>
+</html>
