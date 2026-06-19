@@ -1,11 +1,13 @@
 // Vercel serverless function — fetches BOM Pearce observations server-side (no CORS)
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Cache-Control', 's-maxage=300'); // cache 5 min
+  res.setHeader('Cache-Control', 's-maxage=60'); // cache 1 min for fresher data
 
+  // IDW60901 = one-minute obs (matches the live "Latest Weather" panel)
+  // IDW60801 = half-hourly obs (lags behind) — fallback only
   const FEEDS = [
-    'https://www.bom.gov.au/fwo/IDW60801/IDW60801.94608.json',
     'https://www.bom.gov.au/fwo/IDW60901/IDW60901.94608.json',
+    'https://www.bom.gov.au/fwo/IDW60801/IDW60801.94608.json',
   ];
 
   for (const feed of FEEDS) {
@@ -18,8 +20,11 @@ export default async function handler(req, res) {
       });
       if (!r.ok) continue;
       const data = await r.json();
-      const obs = data?.observations?.data?.[0];
-      if (!obs) continue;
+      const rows = data?.observations?.data;
+      if (!rows || !rows.length) continue;
+
+      // data[0] is the most recent reading
+      const obs = rows[0];
 
       let kts = null;
       if (obs.gust_kt != null) kts = obs.gust_kt;
@@ -30,7 +35,7 @@ export default async function handler(req, res) {
         windGust: kts,
         airTemp: obs.air_temp,
         time: obs.local_date_time,
-        source: feed,
+        source: feed.includes('IDW60901') ? 'one-minute' : 'half-hourly',
       });
     } catch (e) {
       // try next feed
