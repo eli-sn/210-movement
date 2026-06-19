@@ -4,8 +4,8 @@ export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store'); // never cache — always fresh
 
   const FEEDS = [
-    'https://www.bom.gov.au/fwo/IDW60901/IDW60901.94608.json',
-    'https://www.bom.gov.au/fwo/IDW60801/IDW60801.94608.json',
+    'https://www.bom.gov.au/fwo/IDW60901/IDW60901.94614.json',
+    'https://www.bom.gov.au/fwo/IDW60801/IDW60801.94614.json',
   ];
 
   const debug = req.query && req.query.debug;
