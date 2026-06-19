@@ -1,7 +1,7 @@
 // Vercel serverless function — fetches BOM Pearce observations server-side (no CORS)
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Cache-Control', 's-maxage=60');
+  res.setHeader('Cache-Control', 'no-store'); // never cache — always fresh
 
   const FEEDS = [
     'https://www.bom.gov.au/fwo/IDW60901/IDW60901.94608.json',
@@ -23,18 +23,25 @@ export default async function handler(req, res) {
       const rows = data?.observations?.data;
       if (!rows || !rows.length) continue;
 
-      const obs = rows[0];
+      // Pick the row with the newest timestamp (sort_order=0 is usually newest,
+      // but sort explicitly to be safe)
+      let obs = rows[0];
+      for (const row of rows) {
+        if ((row.sort_order ?? 999) < (obs.sort_order ?? 999)) obs = row;
+      }
 
-      // Debug mode: dump the full first observation to inspect field names
       if (debug) {
-        return res.status(200).json({ source: feed, raw: obs });
+        return res.status(200).json({
+          source: feed,
+          rowCount: rows.length,
+          chosen: obs,
+        });
       }
 
       let kts = null;
       if (obs.gust_kt != null) kts = obs.gust_kt;
       else if (obs.wind_gust_kt != null) kts = obs.wind_gust_kt;
       else if (obs.gust_kmh != null) kts = Math.round(obs.gust_kmh * 0.539957);
-      else if (obs.wind_gust_spd_kmh != null) kts = Math.round(obs.wind_gust_spd_kmh * 0.539957);
 
       return res.status(200).json({
         feelsLike: obs.apparent_t,
