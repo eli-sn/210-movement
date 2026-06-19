@@ -1,18 +1,17 @@
-// Vercel serverless function — fetches BOM Pearce observations server-side (no CORS)
+// Vercel serverless function — fetches nearest BOM observation to Pearce (3Q85)
+// Note: BOM's beta Pearce page blends data; this returns the closest real
+// station observation as a starting estimate. Always verify/override manually.
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Cache-Control', 'no-store');
 
-  // Pearce RAAF candidate feeds (different products / station numbers)
+  // Pearce RAAF area stations, nearest first
   const FEEDS = [
-    'https://www.bom.gov.au/fwo/IDW60801/IDW60801.94614.json', // Pearce half-hourly
-    'https://www.bom.gov.au/fwo/IDW60901/IDW60901.94614.json', // Pearce one-minute
-    'https://www.bom.gov.au/fwo/IDW60801/IDW60801.95614.json', // Pearce AWS alt
-    'https://www.bom.gov.au/fwo/IDW60801/IDW60801.94615.json', // Pearce alt
+    'https://www.bom.gov.au/fwo/IDW60801/IDW60801.94614.json', // Pearce RAAF
+    'https://www.bom.gov.au/fwo/IDW60901/IDW60901.94608.json', // Perth (fallback)
   ];
 
   const debug = req.query && req.query.debug;
-  const tried = [];
 
   for (const feed of FEEDS) {
     try {
@@ -22,7 +21,6 @@ export default async function handler(req, res) {
           'Accept': 'application/json',
         },
       });
-      tried.push({ feed, status: r.status });
       if (!r.ok) continue;
       const data = await r.json();
       const rows = data?.observations?.data;
@@ -31,12 +29,6 @@ export default async function handler(req, res) {
       let obs = rows[0];
       for (const row of rows) {
         if ((row.sort_order ?? 999) < (obs.sort_order ?? 999)) obs = row;
-      }
-
-      // Only accept if it's actually Pearce
-      if (obs.name && !/pearce/i.test(obs.name)) {
-        tried[tried.length - 1].name = obs.name + ' (rejected)';
-        continue;
       }
 
       if (debug) {
@@ -53,12 +45,11 @@ export default async function handler(req, res) {
         airTemp: obs.air_temp,
         time: obs.local_date_time,
         station: obs.name,
-        source: feed,
       });
     } catch (e) {
-      tried.push({ feed, error: String(e) });
+      // try next feed
     }
   }
 
-  return res.status(502).json({ error: 'No Pearce feed found', tried });
+  return res.status(502).json({ error: 'Could not reach BOM' });
 }
